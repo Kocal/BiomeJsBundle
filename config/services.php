@@ -10,6 +10,11 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $container): void {
+    $container->parameters()
+        // Internal parameter to enable/disable TTY mode, useful for tests (if someone has a better idea, feel free to suggest it!)
+        ->set('biomejs.use_tty', true)
+    ;
+
     $container->services()
         ->set('biomejs.binary', BiomeJsBinary::class)
         ->args([
@@ -21,6 +26,7 @@ return static function (ContainerConfigurator $container): void {
         ->set('biomejs', BiomeJs::class)
         ->args([
             service('biomejs.binary'),
+            param('biomejs.use_tty')
         ])
 
         ->set('biomejs.command.ci', BiomeJsCiCommand::class)
