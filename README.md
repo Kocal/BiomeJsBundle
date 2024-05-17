@@ -21,7 +21,7 @@ If that's not the case, you can enable it manually:
 // config/bundles.php
 return [
     // ...
-    Kocal\BiomeJsBundle\KocalBiomeJsBundle::class => ['all' => true],
+    Kocal\BiomeJsBundle\KocalBiomeJsBundle::class => ['dev' => true],
 ];
 ```
 
