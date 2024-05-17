@@ -1,6 +1,11 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: max
 
     paths:
         - src
         - tests
+
+    reportUnmatchedIgnoredErrors: false
