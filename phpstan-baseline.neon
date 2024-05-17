@@ -1,0 +1,90 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\$apply of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCheckCommand.php
+
+		-
+			message: "#^Parameter \\$applyUnsafe of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCheckCommand.php
+
+		-
+			message: "#^Parameter \\$changed of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCheckCommand.php
+
+		-
+			message: "#^Parameter \\$formatterEnabled of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCheckCommand.php
+
+		-
+			message: "#^Parameter \\$linterEnabled of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCheckCommand.php
+
+		-
+			message: "#^Parameter \\$organizeImportsEnabled of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCheckCommand.php
+
+		-
+			message: "#^Parameter \\$path of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects array\\<string\\>, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCheckCommand.php
+
+		-
+			message: "#^Parameter \\$since of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCheckCommand.php
+
+		-
+			message: "#^Parameter \\$staged of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCheckCommand.php
+
+		-
+			message: "#^Parameter \\$changed of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:ci\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCiCommand.php
+
+		-
+			message: "#^Parameter \\$formatterEnabled of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:ci\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCiCommand.php
+
+		-
+			message: "#^Parameter \\$linterEnabled of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:ci\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCiCommand.php
+
+		-
+			message: "#^Parameter \\$organizeImportsEnabled of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:ci\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCiCommand.php
+
+		-
+			message: "#^Parameter \\$path of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:ci\\(\\) expects array\\<string\\>, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCiCommand.php
+
+		-
+			message: "#^Parameter \\$since of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:ci\\(\\) expects string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsCiCommand.php
+
+		-
+			message: "#^Cannot call method end\\(\\) on Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\|null\\.$#"
+			count: 1
+			path: src/DependencyInjection/BiomeJsExtension.php
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\:\\:end\\(\\)\\.$#"
+			count: 1
+			path: src/DependencyInjection/BiomeJsExtension.php
+
+		-
+			message: "#^Method Kocal\\\\BiomeJsBundle\\\\DependencyInjection\\\\BiomeJsExtension\\:\\:getConfiguration\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/DependencyInjection/BiomeJsExtension.php
