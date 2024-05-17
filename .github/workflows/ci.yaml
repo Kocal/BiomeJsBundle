@@ -59,6 +59,14 @@ jobs:
           - PHP_VERSION: '8.3'
             SYMFONY_VERSION: '7.0'
 
+          # Highest supported PHP version with the latest Symfony version, on Windows and macOS
+          - PHP_VERSION: '8.3'
+            SYMFONY_VERSION: '7.0'
+            OS: windows-latest
+          - PHP_VERSION: '8.3'
+            SYMFONY_VERSION: '7.0'
+            OS: macos-14
+
           # Latest 7.x development releases
           - PHP_VERSION: '8.1'
             SYMFONY_VERSION: '7.*'
