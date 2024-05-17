@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Kocal\BiomeJsBundle\Tests;
@@ -13,7 +14,7 @@ final class BiomeJsBinaryTest extends TestCase
 {
     public function testBinaryIsDownloadedIfNotExists(): void
     {
-        $binaryDownloadDir = __DIR__.'/fixtures/var/download';
+        $binaryDownloadDir = __DIR__ . '/fixtures/var/download';
         $fs = new Filesystem();
         if (file_exists($binaryDownloadDir)) {
             $fs->remove($binaryDownloadDir);
@@ -31,13 +32,13 @@ final class BiomeJsBinaryTest extends TestCase
             $client
         );
         $process = $binary->createProcess(['check', '--apply', '*.{js,ts}']);
-        $this->assertFileExists($binaryDownloadDir.'/fake-version/'.BiomeJsBinary::getBinaryName());
+        $this->assertFileExists($binaryDownloadDir . '/fake-version/' . BiomeJsBinary::getBinaryName());
 
         // Windows doesn't wrap arguments in quotes
         $expectedTemplate = '\\' === \DIRECTORY_SEPARATOR ? '"%s" check --apply *.{js,ts}' : "'%s' 'check' '--apply' '*.{js,ts}'";
 
         $this->assertSame(
-            sprintf($expectedTemplate, $binaryDownloadDir.'/fake-version/'.BiomeJsBinary::getBinaryName()),
+            sprintf($expectedTemplate, $binaryDownloadDir . '/fake-version/' . BiomeJsBinary::getBinaryName()),
             $process->getCommandLine()
         );
     }

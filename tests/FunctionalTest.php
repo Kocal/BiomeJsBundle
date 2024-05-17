@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Kocal\BiomeJsBundle\Tests;
@@ -14,7 +15,7 @@ final class FunctionalTest extends KernelTestCase
     protected function setUp(): void
     {
         $fs = new Filesystem();
-        if (is_dir($biomejsVarDir = __DIR__.'/fixtures/var/biomejs')) {
+        if (is_dir($biomejsVarDir = __DIR__ . '/fixtures/var/biomejs')) {
             $fs->remove($biomejsVarDir);
         }
     }
@@ -22,13 +23,14 @@ final class FunctionalTest extends KernelTestCase
     public function testCommandCheck(): void
     {
         self::bootKernel();
+        self::assertNotNull(self::$kernel);
         $application = new Application(self::$kernel);
 
         $command = $application->find('biomejs:check');
         $commandTester = new CommandTester($command);
 
         $statusCode = $commandTester->execute([
-            'path' => [__DIR__.'/fixtures/'],
+            'path' => [__DIR__ . '/fixtures/'],
         ]);
         self::assertSame(Command::FAILURE, $statusCode, 'The command should return a non-zero exit code');
 
@@ -45,13 +47,14 @@ final class FunctionalTest extends KernelTestCase
     public function testCommandCi(): void
     {
         self::bootKernel();
+        self::assertNotNull(self::$kernel);
         $application = new Application(self::$kernel);
 
         $command = $application->find('biomejs:ci');
         $commandTester = new CommandTester($command);
 
         $statusCode = $commandTester->execute([
-            'path' => [__DIR__.'/fixtures/'],
+            'path' => [__DIR__ . '/fixtures/'],
         ]);
         self::assertSame(Command::FAILURE, $statusCode, 'The command should return a non-zero exit code');
 
