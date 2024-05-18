@@ -53,9 +53,9 @@ final class BiomeJsCheckCommand extends Command
         $process = $this->biomeJs->check(
             apply: $input->getOption('apply'),
             applyUnsafe: $input->getOption('apply-unsafe'),
-            formatterEnabled: $input->getOption('formatter-enabled'),
-            linterEnabled: $input->getOption('linter-enabled'),
-            organizeImportsEnabled: $input->getOption('organize-imports-enabled'),
+            formatterEnabled: filter_var($input->getOption('formatter-enabled'), FILTER_VALIDATE_BOOL),
+            linterEnabled: filter_var($input->getOption('linter-enabled'), FILTER_VALIDATE_BOOL),
+            organizeImportsEnabled: filter_var($input->getOption('organize-imports-enabled'), FILTER_VALIDATE_BOOL),
             staged: $input->getOption('staged'),
             changed: $input->getOption('changed'),
             since: $input->getOption('since'),
