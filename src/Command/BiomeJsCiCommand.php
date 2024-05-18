@@ -49,9 +49,9 @@ final class BiomeJsCiCommand extends Command
         $this->biomeJs->setOutput($this->io);
 
         $process = $this->biomeJs->ci(
-            formatterEnabled: $input->getOption('formatter-enabled'),
-            linterEnabled: $input->getOption('linter-enabled'),
-            organizeImportsEnabled: $input->getOption('organize-imports-enabled'),
+            formatterEnabled: filter_var($input->getOption('formatter-enabled'), FILTER_VALIDATE_BOOL),
+            linterEnabled: filter_var($input->getOption('linter-enabled'), FILTER_VALIDATE_BOOL),
+            organizeImportsEnabled: filter_var($input->getOption('organize-imports-enabled'), FILTER_VALIDATE_BOOL),
             changed: $input->getOption('changed'),
             since: $input->getOption('since'),
             path: $input->getArgument('path'),
