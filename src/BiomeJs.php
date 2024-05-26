@@ -17,7 +17,7 @@ final class BiomeJs
     ) {
     }
 
-    public function setOutput(SymfonyStyle|null $output): void
+    public function setOutput(?SymfonyStyle $output): void
     {
         $this->output = $output;
     }
@@ -33,7 +33,7 @@ final class BiomeJs
         bool $organizeImportsEnabled,
         bool $staged,
         bool $changed,
-        string|null $since,
+        ?string $since,
         array $path,
     ): Process {
         $arguments = [];
@@ -81,7 +81,7 @@ final class BiomeJs
         bool $linterEnabled,
         bool $organizeImportsEnabled,
         bool $changed,
-        string|null $since,
+        ?string $since,
         array $path,
     ): Process {
         $arguments = [];
