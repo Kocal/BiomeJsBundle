@@ -100,3 +100,54 @@ jobs:
 
       - name: Run PHPUnit
         run: symfony php vendor/bin/phpunit
+  
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: symfony-cli
+
+      - name: Install Composer dependencies
+        run: symfony composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Create a new Symfony project and install kocal/biome-js-bundle
+        run: |
+          git config --global user.email "hugo@alliau.me"
+          git config --global user.name "Hugo Alliaume"
+          symfony new my_app --webapp
+          cd my_app
+          symfony composer config minimum-stability dev
+          symfony composer config repositories.biome-js-bundle '{"type":"path", "url":"../","options":{"symlink":true}}'
+          symfony composer require 'kocal/biome-js-bundle:*' --dev
+          cat << EOF > biome.json
+          { 
+            "files": {
+              "ignore": [
+                "composer.json",
+                "assets/vendor/*",
+                "vendor/*",
+                "public/bundles/*"
+              ]
+            }
+          }
+          EOF
+
+      - name: Run Biome CI, which should fails
+        run: symfony console biome:ci .
+        continue-on-error: true
+        working-directory: my_app
+
+      - name: Run Biome Check, and apply fixes
+        run: symfony console biome:check . --apply
+        working-directory: my_app
+
+      - name: Run Biome CI, which should now pass
+        run: symfony console biome:ci .
+        working-directory: my_app
+

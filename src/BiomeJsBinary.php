@@ -11,20 +11,20 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class BiomeJsBinary
 {
-    private SymfonyStyle|null $output = null;
+    private ?SymfonyStyle $output = null;
     private HttpClientInterface $httpClient;
-    private string|null $cachedVersion = null;
+    private ?string $cachedVersion = null;
 
     public function __construct(
         private readonly string $cwd,
         private readonly string $binaryDownloadDir,
-        private readonly string|null $binaryVersion,
-        HttpClientInterface|null $httpClient = null,
+        private readonly ?string $binaryVersion,
+        ?HttpClientInterface $httpClient = null,
     ) {
         $this->httpClient = $httpClient ?? HttpClient::create();
     }
 
-    public function setOutput(SymfonyStyle|null $output): void
+    public function setOutput(?SymfonyStyle $output): void
     {
         $this->output = $output;
     }
