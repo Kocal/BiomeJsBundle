@@ -5,6 +5,7 @@ use Kocal\BiomeJsBundle\BiomeJsBinary;
 use Kocal\BiomeJsBundle\Command\BiomeJsCheckCommand;
 use Kocal\BiomeJsBundle\Command\BiomeJsCiCommand;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\Process\Process;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_arg;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
@@ -12,7 +13,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 return static function (ContainerConfigurator $container): void {
     $container->parameters()
         // Internal parameter to enable/disable TTY mode, useful for tests (if someone has a better idea, feel free to suggest it!)
-        ->set('biomejs.use_tty', true)
+        ->set('biomejs.use_tty', Process::isTtySupported())
     ;
 
     $container->services()
