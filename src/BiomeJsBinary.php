@@ -93,9 +93,14 @@ final class BiomeJsBinary
     private function getLatestVersion(): string
     {
         try {
-            $response = $this->httpClient->request('GET', 'https://api.github.com/repos/biomejs/biome/releases/latest');
+            $response = $this->httpClient->request('GET', 'https://api.github.com/repos/biomejs/biome/releases');
+            foreach ($response->toArray() as $release) {
+                if (str_starts_with($release['tag_name'], 'cli/')) {
+                    return str_replace('cli/', '', $release['tag_name']);
+                }
+            }
 
-            return str_replace('cli/', '', $response->toArray()['tag_name'] ?? throw new \Exception('Cannot get the latest version name from response JSON.'));
+            throw new \Exception('Unable to find the latest Biome.js CLI release.');
         } catch (\Throwable $e) {
             throw new \Exception('Cannot determine latest Biome.js binary version. Please specify a version in the configuration.', previous: $e);
         }
