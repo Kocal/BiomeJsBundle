@@ -32,12 +32,12 @@ final class BiomeJsBinaryTest extends TestCase
             $client
         );
         $process = $binary->createProcess(['check', '--apply', '*.{js,ts}']);
-        $this->assertFileExists($binaryDownloadDir . '/fake-version/' . BiomeJsBinary::getBinaryName());
+        self::assertFileExists($binaryDownloadDir . '/fake-version/' . BiomeJsBinary::getBinaryName());
 
         // Windows doesn't wrap arguments in quotes
         $expectedTemplate = '\\' === \DIRECTORY_SEPARATOR ? '"%s" check --apply *.{js,ts}' : "'%s' 'check' '--apply' '*.{js,ts}'";
 
-        $this->assertSame(
+        self::assertSame(
             sprintf($expectedTemplate, $binaryDownloadDir . '/fake-version/' . BiomeJsBinary::getBinaryName()),
             $process->getCommandLine()
         );

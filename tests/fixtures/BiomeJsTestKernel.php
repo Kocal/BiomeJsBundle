@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Kernel;
 
 final class BiomeJsTestKernel extends Kernel
@@ -28,7 +29,11 @@ final class BiomeJsTestKernel extends Kernel
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
-        $container->setParameter('biomejs.use_tty', false);
+        $container->register('biomejs.binary_test', TestBiomeJsBinary::class)
+            ->setDecoratedService('biomejs.binary')
+            ->setArguments([
+                new Reference('biomejs.binary_test.inner'),
+            ]);
 
         $container->loadFromExtension('framework', [
             'secret' => 'foo',

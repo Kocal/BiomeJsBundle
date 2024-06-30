@@ -124,7 +124,7 @@ jobs:
           cd my_app
           symfony composer config minimum-stability dev
           symfony composer config repositories.biome-js-bundle '{"type":"path", "url":"../","options":{"symlink":true}}'
-          symfony composer require 'kocal/biome-js-bundle:*' --dev
+          symfony composer require 'kocal/biome-js-bundle:*' --dev --no-interaction
           cat << EOF > biome.json
           { 
             "files": {
@@ -139,15 +139,15 @@ jobs:
           EOF
 
       - name: Run Biome CI, which should fails
-        run: symfony console biome:ci .
+        run: symfony console biomejs:ci .
         continue-on-error: true
         working-directory: my_app
 
       - name: Run Biome Check, and apply fixes
-        run: symfony console biome:check . --apply
+        run: symfony console biomejs:check . --apply
         working-directory: my_app
 
       - name: Run Biome CI, which should now pass
-        run: symfony console biome:ci .
+        run: symfony console biomejs:ci .
         working-directory: my_app
 

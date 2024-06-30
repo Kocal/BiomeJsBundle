@@ -12,8 +12,7 @@ final class BiomeJs
     private ?SymfonyStyle $output;
 
     public function __construct(
-        private readonly BiomeJsBinary $biomeJsBinary,
-        private readonly bool $useTty = true,
+        private readonly BiomeJsBinaryInterface $biomeJsBinary,
     ) {
     }
 
@@ -59,7 +58,6 @@ final class BiomeJs
 
         $this->biomeJsBinary->setOutput($this->output);
         $process = $this->biomeJsBinary->createProcess($arguments);
-        $process->setTty($this->useTty);
 
         $this->output?->note('Executing Biome.js "check" (pass -v to see more details).');
         if ($this->output?->isVerbose()) {
@@ -98,7 +96,6 @@ final class BiomeJs
 
         $this->biomeJsBinary->setOutput($this->output);
         $process = $this->biomeJsBinary->createProcess($arguments);
-        $process->setTty($this->useTty);
 
         $this->output?->note('Executing Biome.js "ci" (pass -v to see more details).');
         if ($this->output?->isVerbose()) {
