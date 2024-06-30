@@ -12,8 +12,10 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class FunctionalTest extends KernelTestCase
 {
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
+
         $fs = new Filesystem();
         if (is_dir($biomejsVarDir = __DIR__ . '/fixtures/var/biomejs')) {
             $fs->remove($biomejsVarDir);

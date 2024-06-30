@@ -9,7 +9,7 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class BiomeJsBinary
+final class BiomeJsBinary implements BiomeJsBinaryInterface
 {
     private ?SymfonyStyle $output = null;
     private HttpClientInterface $httpClient;
@@ -41,7 +41,12 @@ final class BiomeJsBinary
             $this->downloadExecutable();
         }
 
-        return new Process([$binary, ...$arguments], $this->cwd);
+        $process = new Process([$binary, ...$arguments], $this->cwd);
+        if ($process->isTtySupported()) {
+            $process->setTty(true);
+        }
+
+        return $process;
     }
 
     private function downloadExecutable(): void
