@@ -30,8 +30,9 @@ return [
 If you want to use a specific version of Biome.js, you can configure it in your `config/packages/kocal_biome_js.yaml`:
 
 ```yaml
-kocal_biome_js:
-    version: v1.7.3
+when@dev:
+    kocal_biome_js:
+        version: v1.7.3
 ```
 
 To [configure Biome.js it-self](https://biomejs.dev/reference/configuration), you must create a `biome.json` file at the root of your project.
