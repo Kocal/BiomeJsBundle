@@ -52,21 +52,21 @@ A recommended configuration for Symfony projects is to ignore files from `assets
 
 ## Usage
 
-The latest Biome.js CLI binary is automatically installed (if not already installed) when running one of the `biome:*` command.
+The latest Biome.js CLI binary is automatically installed (if not already installed) when running one of the `biomejs:*` command.
 
-### `biome:check`
+### `biomejs:check`
 
 Runs formatter, linter and import sorting to the requested files.
 
 ```bash
 # Shows format and lint errors
-php bin/console biome:check .
+php bin/console biomejs:check .
 
 # Shows format and lint errors, and fix them if possible
 php bin/console biome:check . --apply
 ```
 
-### `biome:ci`
+### `biomejs:ci`
 
 Command to use in CI environments. Runs formatter, linter and import sorting to the requested files.
 
@@ -74,4 +74,5 @@ Files won't be modified, the command is a read-only operation.
 
 ```bash
 # Shows format and lint errors
-php bin/console biome:ci .
+php bin/console biomejs:ci .
+```
