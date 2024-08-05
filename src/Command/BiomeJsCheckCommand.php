@@ -30,8 +30,12 @@ final class BiomeJsCheckCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('apply', null, InputOption::VALUE_NONE, 'Apply safe fixes, formatting and import sorting')
-            ->addOption('apply-unsafe', null, InputOption::VALUE_NONE, 'Apply safe fixes and unsafe fixes, formatting and import sorting')
+            ->addOption('write', null, InputOption::VALUE_NONE, 'Writes safe fixes, formatting and import sorting')
+            ->addOption('unsafe', null, InputOption::VALUE_NONE, ' Allow to do unsafe fixes, should be used with --write')
+            // TODO: Deprecated, remove in favor of --write
+            ->addOption('apply', null, InputOption::VALUE_NONE, 'Apply safe fixes, formatting and import sorting (deprecated, use --write)')
+            // TODO: Deprecated, remove in favor of --unsafe
+            ->addOption('apply-unsafe', null, InputOption::VALUE_NONE, 'Apply safe fixes and unsafe fixes, formatting and import sorting (deprecated, use --write --unsafe)')
             ->addOption('formatter-enabled', null, InputOption::VALUE_OPTIONAL, 'Allow to enable or disable the formatter check', true)
             ->addOption('linter-enabled', null, InputOption::VALUE_OPTIONAL, 'Allow to enable or disable the linter check', true)
             ->addOption('organize-imports-enabled', null, InputOption::VALUE_OPTIONAL, 'Allow to enable or disable the organize imports.', true)
@@ -50,9 +54,23 @@ final class BiomeJsCheckCommand extends Command
     {
         $this->biomeJs->setOutput($this->io);
 
+        $write = $input->getOption('write');
+        $unsafe = $input->getOption('unsafe');
+
+        if ($input->getOption('apply')) {
+            $this->io->warning('The "--apply" option is deprecated and will be removed in the next major version, use "--write" instead.');
+            $write = true;
+        }
+
+        if ($input->getOption('apply-unsafe')) {
+            $this->io->warning('The "--apply-unsafe" option is deprecated and will be removed in the next major version, use "--write --unsafe" instead.');
+            $write = true;
+            $unsafe = true;
+        }
+
         $process = $this->biomeJs->check(
-            apply: $input->getOption('apply'),
-            applyUnsafe: $input->getOption('apply-unsafe'),
+            write: $write,
+            unsafe: $unsafe,
             formatterEnabled: filter_var($input->getOption('formatter-enabled'), FILTER_VALIDATE_BOOL),
             linterEnabled: filter_var($input->getOption('linter-enabled'), FILTER_VALIDATE_BOOL),
             organizeImportsEnabled: filter_var($input->getOption('organize-imports-enabled'), FILTER_VALIDATE_BOOL),

@@ -9,6 +9,9 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/**
+ * @internal
+ */
 final class BiomeJsBinary implements BiomeJsBinaryInterface
 {
     private ?SymfonyStyle $output = null;
