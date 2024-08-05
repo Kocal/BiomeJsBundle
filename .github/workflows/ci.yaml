@@ -116,13 +116,16 @@ jobs:
       - name: Install Composer dependencies
         run: symfony composer install --prefer-dist --no-interaction --no-progress
 
-      - name: Create a new Symfony project and install kocal/biome-js-bundle
+      - name: Create a new Symfony project
         run: |
           git config --global user.email "hugo@alliau.me"
           git config --global user.name "Hugo Alliaume"
           symfony new my_app --webapp
-          cd my_app
+          
+      - name: Install kocal/biome-js-bundle
+        run: |
           symfony composer config minimum-stability dev
+          symfony composer config --json extra.symfony.allow-contrib 'true'
           symfony composer config repositories.biome-js-bundle '{"type":"path", "url":"../","options":{"symlink":true}}'
           symfony composer require 'kocal/biome-js-bundle:*' --dev --no-interaction
           cat << EOF > biome.json
@@ -137,6 +140,7 @@ jobs:
             }
           }
           EOF
+        working-directory: my_app
 
       - name: Run Biome CI, which should fails
         run: symfony console biomejs:ci .
@@ -144,10 +148,9 @@ jobs:
         working-directory: my_app
 
       - name: Run Biome Check, and apply fixes
-        run: symfony console biomejs:check . --apply
+        run: symfony console biomejs:check . --write
         working-directory: my_app
 
       - name: Run Biome CI, which should now pass
         run: symfony console biomejs:ci .
         working-directory: my_app
-
