@@ -7,6 +7,9 @@ namespace Kocal\BiomeJsBundle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 
+/**
+ * @internal
+ */
 final class BiomeJs
 {
     private ?SymfonyStyle $output;
@@ -25,8 +28,8 @@ final class BiomeJs
      * @param array<string> $path
      */
     public function check(
-        bool $apply,
-        bool $applyUnsafe,
+        bool $write,
+        bool $unsafe,
         bool $formatterEnabled,
         bool $linterEnabled,
         bool $organizeImportsEnabled,
@@ -36,11 +39,11 @@ final class BiomeJs
         array $path,
     ): Process {
         $arguments = [];
-        if ($apply) {
-            $arguments[] = '--apply';
+        if ($write) {
+            $arguments[] = '--write';
         }
-        if ($applyUnsafe) {
-            $arguments[] = '--apply-unsafe';
+        if ($unsafe) {
+            $arguments[] = '--unsafe';
         }
         $arguments[] = '--formatter-enabled=' . ($formatterEnabled ? 'true' : 'false');
         $arguments[] = '--linter-enabled=' . ($linterEnabled ? 'true' : 'false');
