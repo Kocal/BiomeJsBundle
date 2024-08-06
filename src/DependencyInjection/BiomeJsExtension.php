@@ -46,9 +46,13 @@ final class BiomeJsExtension extends Extension implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('binary_version')
-                    ->info('Biome.js CLI version to download - null means the latest version')
-                    ->example('v1.7.3')
-                    ->defaultNull()
+                    ->info('Biome.js CLI version to download, can be either a specific version, "latest_stable" or "latest_nightly".')
+                    ->example([
+                        'v1.7.3',
+                        'latest_stable',
+                        'latest_nightly',
+                    ])
+                    ->defaultValue('latest_stable')
                 ->end()
             ->end();
 

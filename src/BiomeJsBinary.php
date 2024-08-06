@@ -18,12 +18,22 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
     private HttpClientInterface $httpClient;
     private ?string $cachedVersion = null;
 
+    public const LATEST_STABLE_VERSION = 'latest_stable';
+    public const LATEST_NIGHTLY_VERSION = 'latest_nightly';
+
+    /**
+     * @param string|self::LATEST_STABLE_VERSION|self::LATEST_NIGHTLY_VERSION|null $binaryVersion
+     */
     public function __construct(
         private readonly string $cwd,
         private readonly string $binaryDownloadDir,
         private readonly ?string $binaryVersion,
         ?HttpClientInterface $httpClient = null,
     ) {
+        if (null === $this->binaryVersion) {
+            trigger_deprecation('kocal/biome-js-bundle', '1.1', 'Not explicitly specifying a Biome.js CLI version is deprecated, use "latest_stable", "latest_nightly", or an explicit version (e.g.: "v1.8.3") instead.');
+        }
+
         $this->httpClient = $httpClient ?? HttpClient::create();
     }
 
@@ -95,17 +105,39 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
 
     private function getVersion(): string
     {
-        return $this->cachedVersion ??= $this->binaryVersion ?? $this->getLatestVersion();
+        if (null !== $this->cachedVersion) {
+            return $this->cachedVersion;
+        }
+
+        if (null === $this->binaryVersion || self::LATEST_STABLE_VERSION === $this->binaryVersion || self::LATEST_NIGHTLY_VERSION === $this->binaryVersion) {
+            return $this->cachedVersion = $this->getLatestVersion();
+        }
+
+        return $this->cachedVersion = $this->binaryVersion;
     }
 
     private function getLatestVersion(): string
     {
+        $useStable = null === $this->binaryVersion || 'latest_stable' === $this->binaryVersion;
+        $useNightly = 'latest_nightly' === $this->binaryVersion;
+
         try {
             $response = $this->httpClient->request('GET', 'https://api.github.com/repos/biomejs/biome/releases');
+
             foreach ($response->toArray() as $release) {
-                if (str_starts_with($release['tag_name'], 'cli/')) {
-                    return str_replace('cli/', '', $release['tag_name']);
+                if (!str_starts_with($release['tag_name'], 'cli/')) {
+                    continue;
                 }
+
+                if ($useStable && true === $release['prerelease']) {
+                    continue;
+                }
+
+                if ($useNightly && false === $release['prerelease']) {
+                    continue;
+                }
+
+                return str_replace('cli/', '', $release['tag_name']);
             }
 
             throw new \Exception('Unable to find the latest Biome.js CLI release.');
