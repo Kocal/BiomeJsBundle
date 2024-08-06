@@ -1,6 +1,7 @@
 # BiomeJsBundle
 
 [![.github/workflows/ci.yaml](https://github.com/Kocal/BiomeJsBundle/actions/workflows/ci.yaml/badge.svg)](https://github.com/Kocal/BiomeJsBundle/actions/workflows/ci.yaml)
+![Packagist Version](https://img.shields.io/packagist/v/kocal/biome-js-bundle)
 
 This bundle makes it easy to use [Biome.js](https://biomejs.dev/) in your Symfony project,
 to lint and format your assets files without Node.js
@@ -66,7 +67,7 @@ Runs formatter, linter and import sorting to the requested files.
 php bin/console biomejs:check .
 
 # Shows format and lint errors, and fix them if possible
-php bin/console biome:check . --apply
+php bin/console biome:check . --write
 ```
 
 ### `biomejs:ci`
