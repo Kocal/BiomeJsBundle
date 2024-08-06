@@ -40,13 +40,16 @@ To [configure Biome.js it-self](https://biomejs.dev/reference/configuration), yo
 A recommended configuration for Symfony projects is to ignore files from `assets/vendor/`, `vendor/` and `public/bundles/`:
 ```json
 {
-  "files": {
-    "ignore": [
-      "assets/vendor/*",
-      "vendor/*",
-      "public/bundles/*"
-    ]
-  }
+    "files": {
+        "ignore": [
+            "assets/vendor/*",
+            "assets/controllers.json",
+            "composer.json",
+            "public/assets/*",
+            "public/bundles/*",
+            "vendor/*"
+        ]
+    }
 }
 ```
 
