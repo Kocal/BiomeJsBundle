@@ -129,15 +129,17 @@ jobs:
           symfony composer config repositories.biome-js-bundle '{"type":"path", "url":"../","options":{"symlink":true}}'
           symfony composer require 'kocal/biome-js-bundle:*' --dev --no-interaction
           cat << EOF > biome.json
-          { 
-            "files": {
-              "ignore": [
-                "composer.json",
-                "assets/vendor/*",
-                "vendor/*",
-                "public/bundles/*"
-              ]
-            }
+          {
+              "files": {
+                  "ignore": [
+                      "assets/vendor/*",
+                      "assets/controllers.json",
+                      "composer.json",
+                      "public/assets/*",
+                      "public/bundles/*",
+                      "vendor/*"
+                  ]
+              }
           }
           EOF
         working-directory: my_app
