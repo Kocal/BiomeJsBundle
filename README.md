@@ -67,7 +67,7 @@ Runs formatter, linter and import sorting to the requested files.
 php bin/console biomejs:check .
 
 # Shows format and lint errors, and fix them if possible
-php bin/console biome:check . --write
+php bin/console biomejs:check . --write
 ```
 
 ### `biomejs:ci`
