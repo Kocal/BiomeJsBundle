@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Loader;
 
 final class BiomeJsExtension extends Extension implements ConfigurationInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new Loader\PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
         $loader->load('services.php');

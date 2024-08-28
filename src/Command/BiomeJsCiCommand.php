@@ -39,7 +39,7 @@ final class BiomeJsCiCommand extends Command
         ;
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->io = new SymfonyStyle($input, $output);
     }
