@@ -45,7 +45,7 @@ final class BiomeJsCheckCommand extends Command
             ->addArgument('path', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Single file, single path or list of paths');
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->io = new SymfonyStyle($input, $output);
     }
