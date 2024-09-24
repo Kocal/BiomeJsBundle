@@ -154,15 +154,6 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
         $os = strtolower(\PHP_OS);
         $machine = strtolower(php_uname('m'));
 
-        $isMusl = false;
-        ob_start();
-        phpinfo(INFO_GENERAL);
-        $buildinfo = ob_get_contents();
-        ob_end_clean();
-        if (preg_match('/--build=.*?-linux-musl/', $buildinfo)) {
-            $isMusl = true;
-        }
-
         return match (true) {
             str_contains($os, 'darwin') => match ($machine) {
                 'arm64' => 'biome-darwin-arm64',
@@ -170,8 +161,8 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
                 default => throw new \Exception(sprintf('No matching machine found for Darwin platform (Machine: %s).', $machine)),
             },
             str_contains($os, 'linux') => match ($machine) {
-                'arm64', 'aarch64' => !$isMusl ? 'biome-linux-arm64' : 'biome-linux-arm64-musl',
-                'x86_64' =>  !$isMusl ? 'biome-linux-x64' : 'biome-linux-x64-musl',
+                'arm64', 'aarch64' => self::isMusl() ? 'biome-linux-arm64-musl' : 'biome-linux-arm64',
+                'x86_64' => self::isMusl() ? 'biome-linux-x64-musl' : 'biome-linux-x64',
                 default => throw new \Exception(sprintf('No matching machine found for Linux platform (Machine: %s).', $machine)),
             },
             str_contains($os, 'win') => match ($machine) {
@@ -181,5 +172,27 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
             },
             default => throw new \Exception(sprintf('Unknown platform or architecture (OS: %s, Machine: %s).', $os, $machine)),
         };
+    }
+
+    /**
+     * Whether the current PHP environment is using musl libc.
+     * This is used to determine the correct Biome.js binary to download.
+     */
+    private static function isMusl(): bool
+    {
+        static $isMusl = null;
+
+        if (null !== $isMusl) {
+            return $isMusl;
+        }
+
+        if (!\function_exists('phpinfo')) {
+            return $isMusl = false;
+        }
+
+        ob_start();
+        phpinfo(\INFO_GENERAL);
+
+        return $isMusl = 1 === preg_match('/--build=.*?-linux-musl/', ob_get_clean() ?: '');
     }
 }
