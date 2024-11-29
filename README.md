@@ -48,6 +48,7 @@ A recommended configuration for Symfony projects is to ignore files from `assets
             "composer.json",
             "public/assets/*",
             "public/bundles/*",
+            "var/cache/*",
             "vendor/*"
         ]
     }
