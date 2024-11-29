@@ -162,6 +162,13 @@ jobs:
                       "public/bundles/*",
                       "vendor/*"
                   ]
+              },
+              "linter": {
+                  "rules" :{
+                      "suspicious": {
+                        "noAssignInExpressions": "off"
+                      }
+                  }
               }
           }
           EOF
@@ -173,7 +180,7 @@ jobs:
         working-directory: my_app
 
       - name: Run Biome Check, and apply fixes
-        run: symfony console biomejs:check . --write
+        run: symfony console biomejs:check . --write --unsafe
         working-directory: my_app
 
       - name: Run Biome CI, which should now pass
