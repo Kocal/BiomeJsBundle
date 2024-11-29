@@ -61,12 +61,28 @@ jobs:
           - PHP_VERSION: '8.4'
             SYMFONY_VERSION: '7.0'
 
+          # Latest 7.1 stable releases
+          - PHP_VERSION: '8.2'
+            SYMFONY_VERSION: '7.1'
+          - PHP_VERSION: '8.3'
+            SYMFONY_VERSION: '7.1'
+          - PHP_VERSION: '8.4'
+            SYMFONY_VERSION: '7.1'
+
+          # Latest 7.2 stable releases
+          - PHP_VERSION: '8.2'
+            SYMFONY_VERSION: '7.2'
+          - PHP_VERSION: '8.3'
+            SYMFONY_VERSION: '7.2'
+          - PHP_VERSION: '8.4'
+            SYMFONY_VERSION: '7.2'
+
           # Highest supported PHP version with the latest Symfony version, on Windows and macOS
           - PHP_VERSION: '8.4'
-            SYMFONY_VERSION: '7.0'
+            SYMFONY_VERSION: '7.2'
             OS: windows-latest
           - PHP_VERSION: '8.4'
-            SYMFONY_VERSION: '7.0'
+            SYMFONY_VERSION: '7.2'
             OS: macos-14
 
           # Latest 7.x development releases
@@ -107,7 +123,7 @@ jobs:
 
       - name: Run PHPUnit
         run: symfony php vendor/bin/phpunit
-  
+
   e2e:
     name: E2E
     runs-on: ubuntu-latest
@@ -128,7 +144,7 @@ jobs:
           git config --global user.email "hugo@alliau.me"
           git config --global user.name "Hugo Alliaume"
           symfony new my_app --webapp
-          
+
       - name: Install kocal/biome-js-bundle
         run: |
           symfony composer config minimum-stability dev
