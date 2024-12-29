@@ -9,6 +9,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+defaults:
+    run:
+        shell: bash
+
 jobs:
   code_quality:
     name: Code Quality
@@ -125,8 +129,11 @@ jobs:
         run: symfony php vendor/bin/phpunit
 
   e2e:
-    name: E2E
-    runs-on: ubuntu-latest
+    name: E2E (${{ matrix.os }})
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
