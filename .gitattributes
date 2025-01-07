@@ -4,4 +4,5 @@
 .gitignore export-ignore
 ecs.php export-ignore
 phpstan.neon.dist export-ignore
+phpstan-baseline.neon
 phpunit.xml.dist export-ignore
