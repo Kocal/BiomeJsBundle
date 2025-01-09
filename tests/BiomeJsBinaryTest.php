@@ -15,10 +15,16 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class BiomeJsBinaryTest extends TestCase
 {
+    private const BINARY_DOWNLOAD_DIR = __DIR__ . '/fixtures/var/download';
+
     private HttpClientInterface $httpClient;
 
     protected function setUp(): void
     {
+        $fs = new Filesystem();
+        $fs->remove(self::BINARY_DOWNLOAD_DIR);
+        $fs->mkdir(self::BINARY_DOWNLOAD_DIR);
+
         $this->httpClient = new MockHttpClient(function (string $method, string $url, array $options) {
             // Mock GitHub API, the releases must contain multiples stable versions and nightly versions,
             // and also not-CLI releases (e.g.: js-api).
@@ -61,27 +67,20 @@ final class BiomeJsBinaryTest extends TestCase
     #[DataProvider('provideBinaryIsDownloadedIfNotExists')]
     public function testBinaryIsDownloadedIfNotExists(?string $passedVersion, string $expectedVersion): void
     {
-        $binaryDownloadDir = __DIR__ . '/fixtures/var/download';
-        $fs = new Filesystem();
-        if (file_exists($binaryDownloadDir)) {
-            $fs->remove($binaryDownloadDir);
-        }
-        $fs->mkdir($binaryDownloadDir);
-
         $binary = new BiomeJsBinary(
             __DIR__,
-            $binaryDownloadDir,
+            self::BINARY_DOWNLOAD_DIR,
             $passedVersion,
             $this->httpClient,
         );
         $process = $binary->createProcess(['check', '--apply', '*.{js,ts}']);
-        self::assertFileExists($binaryDownloadDir . '/' . $expectedVersion . '/' . BiomeJsBinary::getBinaryName());
+        self::assertFileExists(self::BINARY_DOWNLOAD_DIR . '/' . $expectedVersion . '/' . BiomeJsBinary::getBinaryName());
 
         // Windows doesn't wrap arguments in quotes
         $expectedTemplate = '\\' === \DIRECTORY_SEPARATOR ? '"%s" check --apply *.{js,ts}' : "'%s' 'check' '--apply' '*.{js,ts}'";
 
         self::assertSame(
-            sprintf($expectedTemplate, $binaryDownloadDir . '/' . $expectedVersion . '/' . BiomeJsBinary::getBinaryName()),
+            sprintf($expectedTemplate, self::BINARY_DOWNLOAD_DIR . '/' . $expectedVersion . '/' . BiomeJsBinary::getBinaryName()),
             $process->getCommandLine()
         );
     }
