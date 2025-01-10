@@ -6,6 +6,7 @@ namespace Kocal\BiomeJsBundle;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -34,7 +35,7 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
             trigger_deprecation('kocal/biome-js-bundle', '1.1', 'Not explicitly specifying a Biome.js CLI version is deprecated, use "latest_stable", "latest_nightly", or an explicit version (e.g.: "v1.8.3") instead.');
         }
 
-        $this->httpClient = $httpClient ?? HttpClient::create();
+        $this->httpClient = $httpClient ?? new RetryableHttpClient(HttpClient::create());
     }
 
     public function setOutput(?SymfonyStyle $output): void
