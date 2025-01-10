@@ -12,11 +12,16 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $container): void {
     $container->services()
+        ->set('biomejs.cache')
+        ->parent('cache.system')
+        ->tag('cache.pool')
+
         ->set('biomejs.binary', BiomeJsBinary::class)
         ->args([
             param('kernel.project_dir'),
             param('kernel.project_dir').'/var/biomejs',
             abstract_arg('Biome.js binary version'),
+            service('biomejs.cache'),
         ])
         ->alias(BiomeJsBinaryInterface::class, 'biomejs.binary')
 

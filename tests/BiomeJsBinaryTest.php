@@ -7,6 +7,7 @@ namespace Kocal\BiomeJsBundle\Tests;
 use Kocal\BiomeJsBundle\BiomeJsBinary;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
@@ -18,6 +19,8 @@ final class BiomeJsBinaryTest extends TestCase
     private const BINARY_DOWNLOAD_DIR = __DIR__ . '/fixtures/var/download';
 
     private HttpClientInterface $httpClient;
+
+    private CacheItemPoolInterface $cache;
 
     protected function setUp(): void
     {
@@ -51,6 +54,8 @@ final class BiomeJsBinaryTest extends TestCase
 
             return new MockResponse('Not Found', ['http_code' => 404]);
         });
+
+        $this->cache = $this->createMock(CacheItemPoolInterface::class);
     }
 
     /**
@@ -71,6 +76,7 @@ final class BiomeJsBinaryTest extends TestCase
             __DIR__,
             self::BINARY_DOWNLOAD_DIR,
             $passedVersion,
+            $this->cache,
             $this->httpClient,
         );
         $process = $binary->createProcess(['check', '--apply', '*.{js,ts}']);

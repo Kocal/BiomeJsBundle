@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kocal\BiomeJsBundle;
 
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
@@ -29,6 +30,7 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
         private readonly string $cwd,
         private readonly string $binaryDownloadDir,
         private readonly ?string $binaryVersion,
+        private readonly CacheItemPoolInterface $cache,
         ?HttpClientInterface $httpClient = null,
     ) {
         if (null === $this->binaryVersion) {
@@ -121,6 +123,13 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
     {
         $useStable = null === $this->binaryVersion || 'latest_stable' === $this->binaryVersion;
         $useNightly = 'latest_nightly' === $this->binaryVersion;
+        $cacheItem = $this->cache->getItem('latest_version_' . ($useStable ? 'use_stable' : 'dont_use_stable') . '_' . ($useNightly ? 'use_nightly' : 'dont_use_nightly'));
+
+        if (null !== $value = $cacheItem->get()) {
+            \assert(\is_string($value));
+
+            return $value;
+        }
 
         try {
             $response = $this->httpClient->request('GET', 'https://api.github.com/repos/biomejs/biome/releases');
@@ -138,7 +147,11 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
                     continue;
                 }
 
-                return str_replace('cli/', '', $release['tag_name']);
+                $latestVersion = str_replace('cli/', '', $release['tag_name']);
+                $cacheItem->set($latestVersion);
+                $this->cache->save($cacheItem);
+
+                return $latestVersion;
             }
 
             throw new \Exception('Unable to find the latest Biome.js CLI release.');
