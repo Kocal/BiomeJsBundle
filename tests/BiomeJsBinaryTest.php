@@ -12,13 +12,12 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 use Symfony\Component\HttpClient\Response\MockResponse;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class BiomeJsBinaryTest extends TestCase
 {
     private const BINARY_DOWNLOAD_DIR = __DIR__ . '/fixtures/var/download';
 
-    private HttpClientInterface $httpClient;
+    private MockHttpClient $httpClient;
 
     private ArrayAdapter $cache;
 
@@ -98,6 +97,25 @@ final class BiomeJsBinaryTest extends TestCase
             // No specific version was passed, so an HTTP call expected and cache should be set
             self::assertCount(1, $cacheValues);
             self::assertSame($expectedVersion, unserialize($cacheValues[array_key_first($cacheValues)]));
+
+            // Check that the binary is not downloaded again, but the cache is used
+            $binary = $this->cloneAndResetBinary($binary);
+            $this->httpClient->setResponseFactory(fn () => throw new \LogicException('No HTTP request should be made'));
+            $binary->createProcess(['check', '--apply', '*.{js,ts}']);
+
+            $cacheValues = $this->cache->getValues();
+            self::assertCount(1, $cacheValues);
+            self::assertSame($expectedVersion, unserialize($cacheValues[array_key_first($cacheValues)]));
         }
+    }
+
+    private function cloneAndResetBinary(BiomeJsBinary $binary): BiomeJsBinary
+    {
+        $binary = clone $binary;
+
+        $reflProperty = new \ReflectionProperty($binary, 'cachedVersion');
+        $reflProperty->setValue($binary, null);
+
+        return clone $binary;
     }
 }
