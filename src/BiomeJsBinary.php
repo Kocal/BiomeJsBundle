@@ -134,9 +134,7 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
         );
         $cacheItem = $this->cache->getItem($cacheKey);
 
-        if ($cachedLatestVersion = $cacheItem->get()) {
-            \assert(\is_string($cachedLatestVersion));
-
+        if (($cachedLatestVersion = $cacheItem->get()) && is_string($cachedLatestVersion)) {
             return $cachedLatestVersion;
         }
 
