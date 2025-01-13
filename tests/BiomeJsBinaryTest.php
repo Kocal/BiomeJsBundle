@@ -7,7 +7,7 @@ namespace Kocal\BiomeJsBundle\Tests;
 use Kocal\BiomeJsBundle\BiomeJsBinary;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
@@ -20,7 +20,7 @@ final class BiomeJsBinaryTest extends TestCase
 
     private HttpClientInterface $httpClient;
 
-    private CacheItemPoolInterface $cache;
+    private ArrayAdapter $cache;
 
     protected function setUp(): void
     {
@@ -55,7 +55,7 @@ final class BiomeJsBinaryTest extends TestCase
             return new MockResponse('Not Found', ['http_code' => 404]);
         });
 
-        $this->cache = $this->createMock(CacheItemPoolInterface::class);
+        $this->cache = new ArrayAdapter();
     }
 
     /**
@@ -89,5 +89,15 @@ final class BiomeJsBinaryTest extends TestCase
             sprintf($expectedTemplate, self::BINARY_DOWNLOAD_DIR . '/' . $expectedVersion . '/' . BiomeJsBinary::getBinaryName()),
             $process->getCommandLine()
         );
+
+        $cacheValues = $this->cache->getValues();
+        if (null !== $passedVersion && str_starts_with($passedVersion, 'v')) {
+            // A specific version was passed, so no HTTP call expected and no cache call
+            self::assertCount(0, $cacheValues);
+        } else {
+            // No specific version was passed, so an HTTP call expected and cache should be set
+            self::assertCount(1, $cacheValues);
+            self::assertSame($expectedVersion, unserialize($cacheValues[array_key_first($cacheValues)]));
+        }
     }
 }
