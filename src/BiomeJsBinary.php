@@ -123,12 +123,21 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
     {
         $useStable = null === $this->binaryVersion || 'latest_stable' === $this->binaryVersion;
         $useNightly = 'latest_nightly' === $this->binaryVersion;
-        $cacheItem = $this->cache->getItem('latest_version_' . ($useStable ? 'use_stable' : 'dont_use_stable') . '_' . ($useNightly ? 'use_nightly' : 'dont_use_nightly'));
+        $cacheKey = sprintf(
+            'binary.latest_version.%s.%s',
+            match (true) {
+                $useStable => 'stable',
+                $useNightly => 'nightly',
+                default => throw new \LogicException('Invalid configuration'),
+            },
+            self::getBinaryName(),
+        );
+        $cacheItem = $this->cache->getItem($cacheKey);
 
-        if (null !== $value = $cacheItem->get()) {
-            \assert(\is_string($value));
+        if ($cachedLatestVersion = $cacheItem->get()) {
+            \assert(\is_string($cachedLatestVersion));
 
-            return $value;
+            return $cachedLatestVersion;
         }
 
         try {
@@ -148,7 +157,9 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
                 }
 
                 $latestVersion = str_replace('cli/', '', $release['tag_name']);
+
                 $cacheItem->set($latestVersion);
+                $cacheItem->expiresAfter(new \DateInterval('P1W'));
                 $this->cache->save($cacheItem);
 
                 return $latestVersion;
