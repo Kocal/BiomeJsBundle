@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kocal\BiomeJsBundle;
 
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
@@ -29,6 +30,7 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
         private readonly string $cwd,
         private readonly string $binaryDownloadDir,
         private readonly ?string $binaryVersion,
+        private readonly CacheItemPoolInterface $cache,
         ?HttpClientInterface $httpClient = null,
     ) {
         if (null === $this->binaryVersion) {
@@ -121,6 +123,20 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
     {
         $useStable = null === $this->binaryVersion || 'latest_stable' === $this->binaryVersion;
         $useNightly = 'latest_nightly' === $this->binaryVersion;
+        $cacheKey = sprintf(
+            'binary.latest_version.%s.%s',
+            match (true) {
+                $useStable => 'stable',
+                $useNightly => 'nightly',
+                default => throw new \LogicException('Invalid configuration'),
+            },
+            self::getBinaryName(),
+        );
+        $cacheItem = $this->cache->getItem($cacheKey);
+
+        if (($cachedLatestVersion = $cacheItem->get()) && is_string($cachedLatestVersion)) {
+            return $cachedLatestVersion;
+        }
 
         try {
             $response = $this->httpClient->request('GET', 'https://api.github.com/repos/biomejs/biome/releases');
@@ -138,7 +154,13 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
                     continue;
                 }
 
-                return str_replace('cli/', '', $release['tag_name']);
+                $latestVersion = str_replace('cli/', '', $release['tag_name']);
+
+                $cacheItem->set($latestVersion);
+                $cacheItem->expiresAfter(new \DateInterval('P1W'));
+                $this->cache->save($cacheItem);
+
+                return $latestVersion;
             }
 
             throw new \Exception('Unable to find the latest Biome.js CLI release.');
