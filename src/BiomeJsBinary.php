@@ -20,7 +20,14 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
     private HttpClientInterface $httpClient;
     private ?string $cachedVersion = null;
 
+    /**
+     * @deprecated
+     */
     public const LATEST_STABLE_VERSION = 'latest_stable';
+
+    /**
+     * @deprecated
+     */
     public const LATEST_NIGHTLY_VERSION = 'latest_nightly';
 
     /**
@@ -34,7 +41,11 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
         ?HttpClientInterface $httpClient = null,
     ) {
         if (null === $this->binaryVersion) {
-            trigger_deprecation('kocal/biome-js-bundle', '1.1', 'Not explicitly specifying a Biome.js CLI version is deprecated, use "latest_stable", "latest_nightly", or an explicit version (e.g.: "v1.8.3") instead.');
+            trigger_deprecation('kocal/biome-js-bundle', '1.1', 'Not explicitly specifying a Biome.js CLI version is deprecated, configure "kocal_biome_js.binary_version" to use a specific version instead (e.g.: "v1.9.4")');
+        }
+
+        if (in_array($this->binaryVersion, [self::LATEST_STABLE_VERSION, self::LATEST_NIGHTLY_VERSION], true)) {
+            trigger_deprecation('kocal/biome-js-bundle', '1.5', 'Using "%s" version is deprecated and will be removed in the next major version, configure "kocal_biome_js.binary_version" to use a specific version instead (e.g.: "v1.9.4").', $this->binaryVersion);
         }
 
         $this->httpClient = $httpClient ?? new RetryableHttpClient(HttpClient::create());
