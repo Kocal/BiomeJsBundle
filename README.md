@@ -11,59 +11,123 @@ to lint and format your assets files without Node.js
 
 Install the bundle with Composer:
 
-```bash
+```shell
 composer require kocal/biome-js-bundle --dev
 ```
 
-The bundle should have been automatically enabled in your Symfony application (`config/bundles.php`). 
-If that's not the case, you can enable it manually:
+If you use [Symfony Flex](https://symfony.com/doc/current/setup/flex.html), everything must be configured automatically.
+If that's not the case, please follow the next steps:
+
+<details>
+<summary>Manual installation steps</summary>
+
+1. Register the bundle in your `config/bundles.php` file:
 
 ```php
-// config/bundles.php
 return [
     // ...
     Kocal\BiomeJsBundle\KocalBiomeJsBundle::class => ['dev' => true],
 ];
 ```
 
-## Configuration
-
-If you want to use a specific version of Biome.js, you can configure it in your `config/packages/kocal_biome_js.yaml`:
+2. Create the configuration file `config/packages/kocal_biome_js.yaml`:
 
 ```yaml
 when@dev:
     kocal_biome_js:
-        version: v1.7.3
+        # The Biome.js CLI version to use, that you can find at https://github.com/biomejs/biome/tags:
+        # - for >=2.0.0 versions, the git tag follows the pattern "@biomejs/biome@<binary_version>"
+        # - for <2.0.0 versions, the git tag follows the pattern "cli/v<binary_version>"
+        binary_version: '2.0.0'
 ```
 
-To [configure Biome.js it-self](https://biomejs.dev/reference/configuration), you must create a `biome.json` file at the root of your project.
+3. Create the recommended `biome.json` file at the root of your project:
 
-A recommended configuration for Symfony projects is to ignore files from `assets/vendor/`, `vendor/` and `public/bundles/`:
+```json
+{
+    "files": {
+        "includes": [
+            "**",
+            "!assets/vendor/*",
+            "!assets/controllers.json",
+            "!public/assets/*",
+            "!public/bundles/*",
+            "!var/*",
+            "!vendor/*",
+            "!composer.json",
+            "!package.json"
+        ]
+    }
+}
+```
+
+In you use Biome.js <2.0.0, you can use the following configuration instead:
+
 ```json
 {
     "files": {
         "ignore": [
             "assets/vendor/*",
             "assets/controllers.json",
-            "composer.json",
             "public/assets/*",
             "public/bundles/*",
-            "var/cache/*",
-            "vendor/*"
+            "var/*",
+            "vendor/*",
+            "composer.json",
+            "package.json"
         ]
     }
 }
 ```
 
+</details>
+
+## Configuration
+
+The bundle is configured in the `config/packages/kocal_biome_js.yaml` file:
+
+```yaml
+when@dev:
+    kocal_biome_js:
+        
+        # The Biome.js CLI version to use, that you can find at https://github.com/biomejs/biome/tags:
+        # - for >=2.0.0 versions, the git tag follows the pattern "@biomejs/biome@VERSION"
+        # - for <2.0.0 versions, the git tag follows the pattern "cli/VERSION"
+        binary_version: '2.0.0' # required
+```
+
 ## Usage
 
-The latest Biome.js CLI binary is automatically installed (if not already installed) when running one of the `biomejs:*` command.
+### `biomejs:download`
 
-### `biomejs:check`
+Download the Biome.js CLI binary for your configured version, and for your platform (Linux, macOS, Windows).
 
-Runs formatter, linter and import sorting to the requested files.
+By default, the command will download the binary in the `bin/` directory of your project.
 
-```bash
+```shell
+php bin/console biomejs:download
+bin/biome --version
+
+# or, with a custom destination directory
+php bin/console biomejs:download path/to/bin
+path/to/bin/biome --version
+```
+
+### `biomejs:check` (deprecated)
+
+> [!WARNING]  
+> **Deprecated since 1.5.0**
+>
+> In version 2.0.0, the command `biomejs:check` will be removed.
+> Instead, run the command `biomejs:download <version>` and use `bin/biome check`.
+
+> [!NOTE]
+> This command will **not use the Biome.js CLI binary downloaded through `biomejs:download`**,
+> but will instead automatically download another Biome.js CLI binary 1.x.x through the **legacy downloading system**.
+
+Run formatter, linter, and import sorting to the requested files.
+
+```shell
 # Shows format and lint errors
 php bin/console biomejs:check .
 
@@ -71,13 +135,23 @@ php bin/console biomejs:check .
 php bin/console biomejs:check . --write
 ```
 
-### `biomejs:ci`
+### `biomejs:ci` (deprecated)
 
-Command to use in CI environments. Runs formatter, linter and import sorting to the requested files.
+> [!WARNING]  
+> **Deprecated since 1.5.0**
+>
+> In version 2.0.0, the command `biomejs:ci` will be removed.
+> Instead, run the command `biomejs:download <version>` and use `bin/biome ci`.
+
+> [!NOTE]
+> This command will **not use the Biome.js CLI binary downloaded through `biomejs:download`**,
+> but will instead automatically download another Biome.js CLI binary 1.x.x through the **legacy downloading system**.
+
+Command to use in CI environments. Run formatter, linter, and import sorting to the requested files.
 
 Files won't be modified, the command is a read-only operation.
 
-```bash
+```shell
 # Shows format and lint errors
 php bin/console biomejs:ci .
 ```

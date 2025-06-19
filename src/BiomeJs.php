@@ -8,6 +8,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 
 /**
+ * @deprecated 1.5.0 Use the native binary downloaded through "php bin/console biomejs:download" command instead.
+ *
  * @internal
  */
 final class BiomeJs

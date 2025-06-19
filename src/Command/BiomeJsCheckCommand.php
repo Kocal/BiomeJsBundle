@@ -52,6 +52,8 @@ final class BiomeJsCheckCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        trigger_deprecation('kocal/biome-js-bundle', '1.5', 'The "%s" command is deprecated and will be removed in the next major version, use "biomejs:download" instead.', $this->getName());
+
         $this->biomeJs->setOutput($this->io);
 
         $write = $input->getOption('write');

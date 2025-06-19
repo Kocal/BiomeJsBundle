@@ -5,6 +5,7 @@ use Kocal\BiomeJsBundle\BiomeJsBinary;
 use Kocal\BiomeJsBundle\BiomeJsBinaryInterface;
 use Kocal\BiomeJsBundle\Command\BiomeJsCheckCommand;
 use Kocal\BiomeJsBundle\Command\BiomeJsCiCommand;
+use Kocal\BiomeJsBundle\Command\BiomeJsDownloadCommand;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_arg;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
@@ -30,6 +31,13 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             service('biomejs.binary'),
         ])
+
+        ->set('biomejs.command.download', BiomeJsDownloadCommand::class)
+        ->args([
+            abstract_arg('Biome.js binary version'),
+            service('filesystem')
+        ])
+        ->tag('console.command')
 
         ->set('biomejs.command.ci', BiomeJsCiCommand::class)
         ->args([

@@ -30,6 +30,9 @@ final class BiomeJsExtension extends Extension implements ConfigurationInterface
 
         $container->getDefinition('biomejs.binary')
             ->setArgument(2, $config['binary_version']);
+
+        $container->getDefinition('biomejs.command.download')
+            ->setArgument(0, $config['binary_version']);
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
