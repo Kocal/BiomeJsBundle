@@ -48,6 +48,10 @@ final class BiomeJsBinary implements BiomeJsBinaryInterface
             trigger_deprecation('kocal/biome-js-bundle', '1.5', 'Using "%s" version is deprecated and will be removed in the next major version, configure "kocal_biome_js.binary_version" to use a specific version instead (e.g.: "v1.9.4").', $this->binaryVersion);
         }
 
+        if (null !== $this->binaryVersion && version_compare($this->binaryVersion, '2.0.0', '>=')) {
+            throw new \InvalidArgumentException(sprintf('The Biome.js CLI version "%s" is not supported. Instead, use the command "php/bin console biomejs:download", or configure a version lower than 2.0.0.', $this->binaryVersion));
+        }
+
         $this->httpClient = $httpClient ?? new RetryableHttpClient(HttpClient::create());
     }
 

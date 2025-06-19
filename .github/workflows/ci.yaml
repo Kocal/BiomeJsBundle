@@ -131,6 +131,7 @@ jobs:
   e2e:
     name: E2E (${{ matrix.os }})
     strategy:
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
@@ -164,10 +165,11 @@ jobs:
                   "ignore": [
                       "assets/vendor/*",
                       "assets/controllers.json",
-                      "composer.json",
                       "public/assets/*",
                       "public/bundles/*",
-                      "vendor/*"
+                      "var/*",
+                      "vendor/*",
+                      "composer.json"
                   ]
               },
               "linter": {
@@ -192,4 +194,54 @@ jobs:
 
       - name: Run Biome CI, which should now pass
         run: symfony console biomejs:ci .
+        working-directory: my_app
+
+      - name: Re-configure the bundle for using the native Biome.js CLI
+        run: |
+          cat << EOF > config/packages/kocal_biome_js.yaml
+          when@dev:
+              kocal_biome_js:
+                  binary_version: '2.0.0'
+          EOF
+          cat << EOF > biome.json
+          {
+              "files": {
+                  "includes": [
+                      "**",
+                      "!assets/vendor/*",
+                      "!assets/controllers.json",
+                      "!public/assets/*",
+                      "!public/bundles/*",
+                      "!var/*",
+                      "!vendor/*",
+                      "!composer.json"
+                  ]
+              },
+              "linter": {
+                  "rules" :{
+                      "suspicious": {
+                        "noAssignInExpressions": "off"
+                      }
+                  }
+              }
+          }
+          EOF
+          symfony console cache:clear
+        working-directory: my_app
+
+      - name: Download the Biome.js CLI natively
+        run: symfony console biomejs:download
+        working-directory: my_app
+
+      - name: Run Biome CI, which should fails
+        run: bin/biome ci .
+        continue-on-error: true
+        working-directory: my_app
+
+      - name: Run Biome Check, and apply fixes
+        run: bin/biome check . --write --unsafe
+        working-directory: my_app
+
+      - name: Run Biome CI, which should now pass
+        run: bin/biome ci .
         working-directory: my_app

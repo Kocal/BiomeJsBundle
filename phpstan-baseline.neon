@@ -49,7 +49,7 @@ parameters:
 			message: "#^Cannot call method end\\(\\) on Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\|null\\.$#"
 			count: 1
 			path: src/DependencyInjection/BiomeJsExtension.php
-			
+
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\:\\:end\\(\\)\\.$#"
 			count: 1
@@ -59,3 +59,8 @@ parameters:
 			message: "#^Method Kocal\\\\BiomeJsBundle\\\\DependencyInjection\\\\BiomeJsExtension\\:\\:getConfiguration\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/DependencyInjection/BiomeJsExtension.php
+
+		-
+			message: "#^Parameter \\#2 \\$basePath of static method Symfony\\\\Component\\\\Filesystem\\\\Path\\:\\:makeRelative\\(\\) expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Command/BiomeJsDownloadCommand.php
