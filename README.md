@@ -6,6 +6,13 @@
 A Symfony Bundle to easily download and use [Biome.js](https://biomejs.dev/) in your Symfony applications,
 to lint your front assets without needing Node.js (ex: when using [Symfony AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html)).
 
+---
+
+> [!NOTE]
+> This documentation is for version `^2.0`.
+> You can check the previous [documentation for `^1.0` here](https://github.com/Kocal/BiomeJsBundle/tree/v1.5.0).
+
+
 ## Installation
 
 Install the bundle with Composer:
