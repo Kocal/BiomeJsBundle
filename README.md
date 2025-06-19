@@ -1,11 +1,10 @@
 # BiomeJsBundle
 
 [![.github/workflows/ci.yaml](https://github.com/Kocal/BiomeJsBundle/actions/workflows/ci.yaml/badge.svg)](https://github.com/Kocal/BiomeJsBundle/actions/workflows/ci.yaml)
-![Packagist Version](https://img.shields.io/packagist/v/kocal/biome-js-bundle)
+[![Packagist Version](https://img.shields.io/packagist/v/kocal/biome-js-bundle)](https://packagist.org/packages/kocal/biome-js-bundle)
 
-This bundle makes it easy to use [Biome.js](https://biomejs.dev/) in your Symfony project,
-to lint and format your assets files without Node.js
-(ex: when using Symfony's [AssetMapper Component](https://symfony.com/doc/current/frontend/asset_mapper.html)).
+A Symfony Bundle to easily download and use [Biome.js](https://biomejs.dev/) in your Symfony applications,
+to lint your front assets without needing Node.js (ex: when using [Symfony AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html)).
 
 ## Installation
 
@@ -111,47 +110,4 @@ bin/biome --version
 # or, with a custom destination directory
 php bin/console biomejs:download path/to/bin
 path/to/bin/biome --version
-```
-
-### `biomejs:check` (deprecated)
-
-> [!WARNING]  
-> **Deprecated since 1.5.0**
->
-> In version 2.0.0, the command `biomejs:check` will be removed.
-> Instead, run the command `biomejs:download <version>` and use `bin/biome check`.
-
-> [!NOTE]
-> This command will **not use the Biome.js CLI binary downloaded through `biomejs:download`**,
-> but will instead automatically download another Biome.js CLI binary 1.x.x through the **legacy downloading system**.
-
-Run formatter, linter, and import sorting to the requested files.
-
-```shell
-# Shows format and lint errors
-php bin/console biomejs:check .
-
-# Shows format and lint errors, and fix them if possible
-php bin/console biomejs:check . --write
-```
-
-### `biomejs:ci` (deprecated)
-
-> [!WARNING]  
-> **Deprecated since 1.5.0**
->
-> In version 2.0.0, the command `biomejs:ci` will be removed.
-> Instead, run the command `biomejs:download <version>` and use `bin/biome ci`.
-
-> [!NOTE]
-> This command will **not use the Biome.js CLI binary downloaded through `biomejs:download`**,
-> but will instead automatically download another Biome.js CLI binary 1.x.x through the **legacy downloading system**.
-
-Command to use in CI environments. Run formatter, linter, and import sorting to the requested files.
-
-Files won't be modified, the command is a read-only operation.
-
-```shell
-# Shows format and lint errors
-php bin/console biomejs:ci .
 ```

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use Kocal\BiomeJsBundle\Command\BiomeJsDownloadCommand;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
 use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_arg;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
