@@ -32,106 +32,29 @@ jobs:
       - name: Run Easy Coding Standard
         run: symfony php vendor/bin/ecs
 
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          # Minimum supported dependencies and minimum supported PHP version
-          - PHP_VERSION: '8.1'
-            COMPOSER_FLAGS: --prefer-stable --prefer-lowest
-            SYMFONY_VERSION: '6.4.*'
-          - PHP_VERSION: '8.2'
-            COMPOSER_FLAGS: --prefer-stable --prefer-lowest
-            SYMFONY_VERSION: '7.0.*'
-
-          # Latest 6.4 stable releases
-          - PHP_VERSION: '8.1'
-            SYMFONY_VERSION: '6.4.*'
-          - PHP_VERSION: '8.2'
-            SYMFONY_VERSION: '6.4.*'
-          - PHP_VERSION: '8.3'
-            SYMFONY_VERSION: '6.4.*'
-          - PHP_VERSION: '8.4'
-            SYMFONY_VERSION: '6.4.*'
-
-          # Latest 7.0 stable releases
-          - PHP_VERSION: '8.2'
-            SYMFONY_VERSION: '7.0.*'
-          - PHP_VERSION: '8.3'
-            SYMFONY_VERSION: '7.0.*'
-          - PHP_VERSION: '8.4'
-            SYMFONY_VERSION: '7.0.*'
-
-          # Latest 7.1 stable releases
-          - PHP_VERSION: '8.2'
-            SYMFONY_VERSION: '7.1.*'
-          - PHP_VERSION: '8.3'
-            SYMFONY_VERSION: '7.1.*'
-          - PHP_VERSION: '8.4'
-            SYMFONY_VERSION: '7.1.*'
-
-          # Latest 7.2 stable releases
-          - PHP_VERSION: '8.2'
-            SYMFONY_VERSION: '7.2.*'
-          - PHP_VERSION: '8.3'
-            SYMFONY_VERSION: '7.2.*'
-          - PHP_VERSION: '8.4'
-            SYMFONY_VERSION: '7.2.*'
-
-          # Highest supported PHP version with the latest Symfony version, on Windows and macOS
-          - PHP_VERSION: '8.4'
-            SYMFONY_VERSION: '7.2.*'
-            OS: windows-latest
-          - PHP_VERSION: '8.4'
-            SYMFONY_VERSION: '7.2.*'
-            OS: macos-14
-
-          # Latest 7.x development releases
-          - PHP_VERSION: '8.2'
-            SYMFONY_VERSION: '7.*'
-            STABILITY: dev
-          - PHP_VERSION: '8.3'
-            SYMFONY_VERSION: '7.*'
-            STABILITY: dev
-          - PHP_VERSION: '8.4'
-            SYMFONY_VERSION: '7.*'
-            STABILITY: dev
-    env:
-      SYMFONY_REQUIRE: ${{ matrix.config.SYMFONY_VERSION }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.config.PHP_VERSION }}
-          tools: symfony-cli
-
-      - name: Install globally Symfony Flex
-        run: |
-          symfony composer global require --no-progress --no-scripts --no-plugins symfony/flex
-          symfony composer global config --no-plugins allow-plugins.symfony/flex true
-
-      - name: Configure Composer minimum stability
-        if: matrix.config.STABILITY
-        run: symfony composer config minimum-stability ${{ matrix.config.STABILITY }}
-
-      - name: Install Composer dependencies
-        run: symfony composer update ${{ matrix.config.COMPOSER_FLAGS }} --prefer-dist --no-interaction --no-progress
-
       - name: Run PHPStan
         run: symfony php vendor/bin/phpstan analyze
 
   e2e:
-    name: E2E (${{ matrix.os }})
+    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+        php-version: [ '8.1', '8.2', '8.3', '8.4' ]
+        dependency-version: [ '' ]
+        symfony-version: [ '' ]
+        minimum-stability: [ 'stable' ]
+        include:
+          # dev packages (probably not needed to have multiple such jobs)
+          -   minimum-stability: 'dev'
+              php-version: '8.4'
+          # lowest deps
+          -   php-version: '8.1'
+              dependency-version: 'lowest'
+          # LTS version of Symfony
+          -   php-version: '8.1'
+              symfony-version: '6.4.*'
     steps:
       - uses: actions/checkout@v4
 
@@ -139,29 +62,38 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
-          tools: symfony-cli
+          tools: symfony-cli, flex
 
       - name: Install Composer dependencies
-        run: symfony composer install --prefer-dist --no-interaction --no-progress
+        run: |
+          symfony composer config minimum-stability ${{ matrix.minimum-stability }}
+          SYMFONY_REQUIRE=${{ matrix.symfony-version || '>=6.4' }} symfony composer update ${{ matrix.dependency-version == 'lowest' && '--prefer-lowest' || '' }}
 
       - name: Create a new Symfony project
         run: |
           git config --global user.email "hugo@alliau.me"
           git config --global user.name "Hugo Alliaume"
-          symfony new my_app --webapp
+          case "${{ matrix.php-version }}" in
+            8.1) symfony new my_app --version="6.4.*" --webapp ;;
+            8.2) symfony new my_app --version="7.1.*" --webapp ;;
+            8.3) symfony new my_app --version="7.2.*" --webapp ;;
+            8.4) symfony new my_app --version="7.3.*" --webapp ;;
+          esac
 
       - name: Install kocal/biome-js-bundle
+        working-directory: my_app
         run: |
           symfony composer config minimum-stability dev
           symfony composer config --json extra.symfony.allow-contrib 'true'
           symfony composer config repositories.biome-js-bundle '{"type":"path", "url":"../","options":{"symlink":true}}'
-          symfony composer require 'kocal/biome-js-bundle:*' --dev --no-interaction
           
           cat << EOF > config/packages/kocal_biome_js.yaml
           when@dev:
               kocal_biome_js:
                   binary_version: '2.0.0'
           EOF
+          
+          symfony composer require 'kocal/biome-js-bundle:*' --dev --no-interaction
           
           cat << EOF > biome.json
           {
@@ -186,22 +118,20 @@ jobs:
               }
           }
           EOF
-          symfony console cache:clear
-        working-directory: my_app
 
-      - name: Download the Biome.js CLI natively
+      - name: Download the Biome.js CLI
+        working-directory: my_app
         run: symfony console biomejs:download
-        working-directory: my_app
 
-      - name: Run Biome CI, which should fails
+      - name: Run Biome CI, which should fails (but it's expected!)
+        working-directory: my_app
         run: bin/biome ci .
         continue-on-error: true
-        working-directory: my_app
 
       - name: Run Biome Check, and apply fixes
-        run: bin/biome check . --write --unsafe
         working-directory: my_app
+        run: bin/biome check . --write --unsafe
 
       - name: Run Biome CI, which should now pass
-        run: bin/biome ci .
         working-directory: my_app
+        run: bin/biome ci .
