@@ -20,7 +20,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
     name: 'biomejs:download',
-    description: 'Download the Biome.js CLI binary for the current platform and architecture, for a given version.',
+    description: 'Download the Biome.js CLI binary for the current platform and architecture.',
 )]
 final class BiomeJsDownloadCommand extends Command
 {

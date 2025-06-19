@@ -159,50 +159,13 @@ jobs:
           symfony composer config --json extra.symfony.allow-contrib 'true'
           symfony composer config repositories.biome-js-bundle '{"type":"path", "url":"../","options":{"symlink":true}}'
           symfony composer require 'kocal/biome-js-bundle:*' --dev --no-interaction
-          cat << EOF > biome.json
-          {
-              "files": {
-                  "ignore": [
-                      "assets/vendor/*",
-                      "assets/controllers.json",
-                      "public/assets/*",
-                      "public/bundles/*",
-                      "var/*",
-                      "vendor/*",
-                      "composer.json"
-                  ]
-              },
-              "linter": {
-                  "rules" :{
-                      "suspicious": {
-                        "noAssignInExpressions": "off"
-                      }
-                  }
-              }
-          }
-          EOF
-        working-directory: my_app
-
-      - name: Run Biome CI, which should fails
-        run: symfony console biomejs:ci .
-        continue-on-error: true
-        working-directory: my_app
-
-      - name: Run Biome Check, and apply fixes
-        run: symfony console biomejs:check . --write --unsafe
-        working-directory: my_app
-
-      - name: Run Biome CI, which should now pass
-        run: symfony console biomejs:ci .
-        working-directory: my_app
-
-      - name: Re-configure the bundle for using the native Biome.js CLI
-        run: |
+          
           cat << EOF > config/packages/kocal_biome_js.yaml
           when@dev:
               kocal_biome_js:
                   binary_version: '2.0.0'
           EOF
+          
           cat << EOF > biome.json
           {
               "files": {

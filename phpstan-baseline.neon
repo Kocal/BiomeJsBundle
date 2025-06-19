@@ -1,51 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\$changed of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
-			count: 1
-			path: src/Command/BiomeJsCheckCommand.php
-
-		-
-			message: "#^Parameter \\$path of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects array\\<string\\>, mixed given\\.$#"
-			count: 1
-			path: src/Command/BiomeJsCheckCommand.php
-
-		-
-			message: "#^Parameter \\$since of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Command/BiomeJsCheckCommand.php
-
-		-
-			message: "#^Parameter \\$staged of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
-			count: 1
-			path: src/Command/BiomeJsCheckCommand.php
-
-		-
-			message: "#^Parameter \\$unsafe of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
-			count: 1
-			path: src/Command/BiomeJsCheckCommand.php
-
-		-
-			message: "#^Parameter \\$write of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:check\\(\\) expects bool, mixed given\\.$#"
-			count: 1
-			path: src/Command/BiomeJsCheckCommand.php
-
-		-
-			message: "#^Parameter \\$changed of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:ci\\(\\) expects bool, mixed given\\.$#"
-			count: 1
-			path: src/Command/BiomeJsCiCommand.php
-
-		-
-			message: "#^Parameter \\$path of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:ci\\(\\) expects array\\<string\\>, mixed given\\.$#"
-			count: 1
-			path: src/Command/BiomeJsCiCommand.php
-
-		-
-			message: "#^Parameter \\$since of method Kocal\\\\BiomeJsBundle\\\\BiomeJs\\:\\:ci\\(\\) expects string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Command/BiomeJsCiCommand.php
-
-		-
 			message: "#^Cannot call method end\\(\\) on Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\|null\\.$#"
 			count: 1
 			path: src/DependencyInjection/BiomeJsExtension.php
