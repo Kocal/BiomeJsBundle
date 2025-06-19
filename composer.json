@@ -1,6 +1,6 @@
 {
     "name": "kocal/biome-js-bundle",
-    "description": "Use Biome.js with Symfony",
+    "description": "A Symfony Bundle to easily download and use Biome.js in your Symfony applications, to lint your front assets without needing Node.js.",
     "type": "symfony-bundle",
     "keywords": ["biome", "biome.js", "symfony", "bundle"],
     "license": "MIT",
