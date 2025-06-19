@@ -9,11 +9,6 @@
             "Kocal\\BiomeJsBundle\\": "src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Kocal\\BiomeJsBundle\\Tests\\": "tests/"
-        }
-    },
     "authors": [
         {
             "name": "Hugo Alliaume",
@@ -29,7 +24,6 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^1.11",
-        "phpunit/phpunit": "^10.5 || ^11.1",
         "symplify/easy-coding-standard": "^12.1.2",
         "symfony/framework-bundle": "^6.4|^7.0"
     }
