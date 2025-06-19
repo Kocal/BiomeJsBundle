@@ -9,11 +9,6 @@
             "Kocal\\BiomeJsBundle\\": "src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Kocal\\BiomeJsBundle\\Tests\\": "tests/"
-        }
-    },
     "authors": [
         {
             "name": "Hugo Alliaume",
@@ -22,16 +17,13 @@
     ],
     "require": {
         "php": ">=8.1",
-        "symfony/cache": "^6.4|^7.0",
         "symfony/console": "^6.4|^7.0",
-        "symfony/deprecation-contracts": "^2.5|^3",
         "symfony/filesystem": "^6.4|^7.0",
         "symfony/http-client": "^6.4|^7.0",
         "symfony/process": "^6.4|^7.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.11",
-        "phpunit/phpunit": "^10.5 || ^11.1",
         "symplify/easy-coding-standard": "^12.1.2",
         "symfony/framework-bundle": "^6.4|^7.0"
     }
