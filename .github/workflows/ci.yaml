@@ -93,7 +93,10 @@ jobs:
             8.1) symfony new my_app --version="6.4.*" --webapp ;;
             8.2) symfony new my_app --version="7.1.*" --webapp ;;
             8.3) symfony new my_app --version="7.2.*" --webapp ;;
-            8.4) symfony new my_app --version="7.3.*" --webapp ;;
+            8.4) case "${{ matrix.symfony-version }}" in
+              8.0.x-dev) symfony new my_app --version="8.0.x-dev" --webapp ;;
+              *) symfony new my_app --version="7.3.*" --webapp ;;
+            esac ;;
           esac
 
       - name: Install kocal/biome-js-bundle
