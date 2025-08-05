@@ -42,7 +42,7 @@ final class BiomeJsBinary
     {
         static $isMusl = null;
 
-        if (null !== $isMusl) {
+        if (is_bool($isMusl)) {
             return $isMusl;
         }
 
