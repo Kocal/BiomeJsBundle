@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 final class KocalBiomeJsBundle extends Bundle
 {
-    protected function createContainerExtension(): ?ExtensionInterface
+    protected function createContainerExtension(): ExtensionInterface
     {
         return new BiomeJsExtension();
     }
