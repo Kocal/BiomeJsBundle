@@ -65,7 +65,7 @@ when@dev:
             "!var/*",
             "!vendor/*",
             "!composer.json",
-            "!package.json"
+            "!package*.json"
         ]
     }
 }
@@ -84,7 +84,7 @@ In you use Biome.js <2.0.0, you can use the following configuration instead:
             "var/*",
             "vendor/*",
             "composer.json",
-            "package.json"
+            "package*.json"
         ]
     }
 }
