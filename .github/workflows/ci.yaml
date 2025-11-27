@@ -61,8 +61,7 @@ jobs:
           -  php-version: '8.2'
              symfony-version: '7.0.*'
           -  php-version: '8.4'
-             symfony-version: '8.0.x-dev' # TODO: change to '8.0' when Symfony 8.0 is released
-             minimum-stability: 'dev' # TODO: remove when Symfony 8.0 is released
+             symfony-version: '8.0.*'
 
     steps:
       - uses: actions/checkout@v4
@@ -75,7 +74,7 @@ jobs:
 
       - name: Allow Flex Plugin
         run: composer global config --no-plugins allow-plugins.symfony/flex true
-        
+
       - name: Configure Composer stability
         run: composer config minimum-stability ${{ matrix.minimum-stability }}
 
@@ -94,7 +93,7 @@ jobs:
             8.2) symfony new my_app --version="7.1.*" --webapp ;;
             8.3) symfony new my_app --version="7.2.*" --webapp ;;
             8.4) case "${{ matrix.symfony-version }}" in
-              8.0.x-dev) symfony new my_app --version="8.0.x-dev" --webapp ;;
+              8.0.*) symfony new my_app --version="8.0.*" --webapp ;;
               *) symfony new my_app --version="7.3.*" --webapp ;;
             esac ;;
           esac

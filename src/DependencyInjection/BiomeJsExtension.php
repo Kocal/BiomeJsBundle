@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Kocal\BiomeJsBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
@@ -37,11 +36,13 @@ final class BiomeJsExtension extends Extension implements ConfigurationInterface
         return 'kocal_biome_js';
     }
 
+    /**
+     * @return TreeBuilder<'array'>
+     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder($this->getAlias());
         $rootNode = $treeBuilder->getRootNode();
-        \assert($rootNode instanceof ArrayNodeDefinition);
 
         $rootNode
             ->children()
