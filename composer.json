@@ -27,5 +27,12 @@
         "phpstan/phpstan": "^2.1.21",
         "symplify/easy-coding-standard": "12.5.22",
         "symfony/framework-bundle": "^6.4|^7.0|^8.0"
+    },
+    "config": {
+        "audit": {
+            "ignore": [
+                "PKSA-365x-2zjk-pt47"
+            ]
+        }
     }
 }
