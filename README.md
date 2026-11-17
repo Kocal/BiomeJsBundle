@@ -7,7 +7,7 @@ A Symfony Bundle to easily download and use [Biome.js](https://biomejs.dev/) in 
 to lint your front assets without needing Node.js (ex: when using [Symfony AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html)).
 
 > [!TIP]
-> If you prefer to use Oxlint instead, check [Kocal/OxlintBundle](https://github.com/Kocal/OxlintBundle)!
+> If you prefer to use Oxc (Oxidation Compiler) instead, check [Kocal/OxcBundle](https://github.com/Kocal/OxcBundle)!
 
 
 ---
